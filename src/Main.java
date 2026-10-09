@@ -7,22 +7,33 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         AssignmentManager assignmentManager = new AssignmentManager();
+        assignmentManager.loadAssignments();
+
         ModuleManager moduleManager = new ModuleManager();
         StudyTracker studyTracker = new StudyTracker();
 
         int choice = 0;
 
-        while (choice != 8) {
+        while (choice != 11) {
+
+            System.out.println("\n===== DASHBOARD =====");
+            System.out.println("Assignments: " + assignmentManager.getAssignmentCount());
+            System.out.println("Modules: " + moduleManager.getModuleCount());
+            System.out.println("Study Hours: " + studyTracker.getTotalHours());
+            System.out.println("=====================");
 
             System.out.println("\n===== Academic Companion =====");
             System.out.println("1. Add Assignment");
             System.out.println("2. View Assignments");
-            System.out.println("3. Add Module");
-            System.out.println("4. View Modules");
-            System.out.println("5. Add Study Session");
-            System.out.println("6. View Study Sessions");
-            System.out.println("7. Calculate Grade");
-            System.out.println("8. Exit");
+            System.out.println("3. Delete Assignment");
+            System.out.println("4. Mark Assignment Complete");
+            System.out.println("5. Add Module");
+            System.out.println("6. View Modules");
+            System.out.println("7. Add Study Session");
+            System.out.println("8. View Study Sessions");
+            System.out.println("9. Calculate Grade");
+            System.out.println("10. Predict Degree Classification");
+            System.out.println("11. Exit");
             System.out.print("Choice: ");
 
             choice = scanner.nextInt();
@@ -49,9 +60,11 @@ public class Main {
                     String status = scanner.nextLine();
 
                     Assignment assignment =
-                            new Assignment(title, module, dueDate, weighting, status);
+                            new Assignment(title, module,
+                                    dueDate, weighting, status);
 
                     assignmentManager.addAssignment(assignment);
+                    assignmentManager.saveAssignments();
 
                     System.out.println("Assignment Added!");
                     break;
@@ -62,6 +75,30 @@ public class Main {
                     break;
 
                 case 3:
+
+                    assignmentManager.viewAssignments();
+
+                    System.out.print("Enter assignment number to delete: ");
+                    int deleteIndex = scanner.nextInt();
+                    scanner.nextLine();
+
+                    assignmentManager.deleteAssignment(deleteIndex - 1);
+                    assignmentManager.saveAssignments();
+                    break;
+
+                case 4:
+
+                    assignmentManager.viewAssignments();
+
+                    System.out.print("Enter assignment number to complete: ");
+                    int completeIndex = scanner.nextInt();
+                    scanner.nextLine();
+
+                    assignmentManager.markAssignmentComplete(completeIndex - 1);
+                    assignmentManager.saveAssignments();
+                    break;
+
+                case 5:
 
                     System.out.print("Module Name: ");
                     String moduleName = scanner.nextLine();
@@ -78,12 +115,12 @@ public class Main {
                     System.out.println("Module Added!");
                     break;
 
-                case 4:
+                case 6:
 
                     moduleManager.viewModules();
                     break;
 
-                case 5:
+                case 7:
 
                     System.out.print("Subject: ");
                     String subject = scanner.nextLine();
@@ -92,20 +129,20 @@ public class Main {
                     int hours = scanner.nextInt();
                     scanner.nextLine();
 
-                    StudySession studySession =
+                    StudySession session =
                             new StudySession(subject, hours);
 
-                    studyTracker.addSession(studySession);
+                    studyTracker.addSession(session);
 
                     System.out.println("Study Session Added!");
                     break;
 
-                case 6:
+                case 8:
 
                     studyTracker.viewSessions();
                     break;
 
-                case 7:
+                case 9:
 
                     System.out.print("Grade 1: ");
                     double grade1 = scanner.nextDouble();
@@ -126,10 +163,23 @@ public class Main {
                                     grade2,
                                     weight2);
 
-                    System.out.println("Final Grade: " + finalGrade);
+                    System.out.println("Final Grade: "
+                            + finalGrade + "%");
+
                     break;
 
-                case 8:
+                case 10:
+
+                    System.out.print("Enter Average Grade: ");
+                    double average = scanner.nextDouble();
+                    scanner.nextLine();
+
+                    System.out.println("Predicted Degree: "
+                            + GradeCalculator.predictDegree(average));
+
+                    break;
+
+                case 11:
 
                     System.out.println("Goodbye!");
                     break;

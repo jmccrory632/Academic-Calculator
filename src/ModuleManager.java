@@ -26,4 +26,8 @@ public class ModuleManager {
             System.out.println("Current Grade: " + module.getCurrentGrade());
         }
     }
+
+    public int getModuleCount() {
+        return modules.size();
+    }
 }
